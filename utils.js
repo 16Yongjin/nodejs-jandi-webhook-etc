@@ -1,0 +1,132 @@
+const request = require('request');
+const client = require('cheerio-httpcli');
+var moment = require('moment');
+
+
+function getCafeteriaMenu(message, callback) {
+    var place = message.split(" ")[0];
+    var eatingTime = message.split(" ")[1];
+
+    var today = moment().add(9, 'h').format('YYYYMMDD');
+    
+    var url = `https://webs.hufs.ac.kr/jsp/HUFS/cafeteria/viewWeek.jsp?startDt=${today}&endDt=${today}`;
+    
+    if (place == '인문관')
+        url += '&caf_id=h101';
+    else
+        url += '&caf_id=h102';
+
+    var menus = '';
+    var re;
+    if (eatingTime == '점심')
+         re = /중식.+?\d+원/g;
+    else
+         re = /석식.+?\d+원/g;
+
+
+    client.fetch(url, {}, function (err, $, res) {
+        if (err) {console.log('Error : ', err); return;}
+        var menu = $('table').text().replace(/\s+/g, ' ');
+
+        var match;
+
+        while (match = re.exec(menu)) {
+            if (menus != '') {
+                menus += '\n\n';
+            }
+            menus += (match[0].replace(' Kcal', 'Kcal').replace(/\s+/g, '\n').replace(/(\d{2})(\d{2}~\d{2})(\d{2})/g, ' $1:$2:$3\n').replace('Kcal', ' Kcal'));
+        }
+
+        if (menus == '')
+            callback('오늘은 밥 안 나옴');
+        else
+            callback(menus);
+
+    });
+}
+
+var request = require("request");
+
+const spellCheck = (hangle, callback) => {
+    var toCheck = encodeURIComponent(hangle);
+    var url = `https://m.search.naver.com/p/csearch/dcontent/spellchecker.nhn?_callback=window.__jindo2_callback._spellingCheck_0&q=${toCheck}`
+
+    // Set the headers
+    var headers = {
+        'User-Agent':       'Super Agent/0.0.1',
+        'Content-Type':     'application/x-www-form-urlencoded'
+    }
+
+    // Configure the request
+    var options = {
+        url: url,
+        method: 'POST',
+        headers: headers,
+    }
+
+    // Start the request
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // Print out the response body
+            try {
+
+                var temp = body.replace('window.__jindo2_callback._spellingCheck_0(', '');
+                var parsed = JSON.parse(temp.substring(0, temp.length - 2)).message.result;
+                var errataCount = parsed.errata_count;
+                var checked = parsed.html;
+                console.log(checked);
+                var result = checked.replace(/<.+?>/g, '');
+
+                if (errataCount === 0) {
+                    result = '※ 교정할 내용이 없습니다.';
+                }
+            }
+            catch (err) {
+                result = '오류: 네이버 맞춤법검사기';
+                console.log(result);
+                
+                
+            }
+            callback(result);
+            return;
+        }
+    });
+};
+
+const getKoreanWord = (message, callback) => {
+    var toSearch = message.substring(0,message.length-2);
+    var word = encodeURIComponent(toSearch);
+    var url = `http://suggest-bar.daum.net/suggest?mod=json&code=utf_in_out&enc=utf&id=language&cate=kor&q=${word}&callback=window.suggestInstance.dataModel.forceLoadComplete`
+
+    request({
+            url: url,
+            json: true
+        }, function (error, response, body) {
+        
+        var meaning = ''
+        if (!error && response.statusCode === 200) { 
+            try {
+                var res = body.replace('/**/window.suggestInstance.dataModel.forceLoadComplete(', '');
+                res = JSON.parse(res.substring(0, res.length - 2));
+                meaning = res.items.filter((a) => a.includes('|'+toSearch+'|'))[0];
+            }
+            catch (err) {
+                meaning = '오류: 다음 국어사전';
+                console.log(meaning);
+            }
+            
+        }
+        
+        if (meaning)
+        {
+            meaning = meaning.replace(/kokk[|].+[|]/, '');
+            callback(meaning);
+        }
+        else {
+            callback('단어를 찾지 못했습니다.');
+        }
+        });
+}
+
+
+module.exports = {getCafeteriaMenu, spellCheck, getKoreanWord};
