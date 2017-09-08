@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const nodeFlags = require('node-flag')
+
 const { getCafeteriaMenu, spellCheck, getKoreanWord } = require('./utils');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || nodeFlags.get('port') || 5000;
 
 const app = express();
 app.use(bodyParser.json());

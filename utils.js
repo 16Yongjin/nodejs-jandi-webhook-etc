@@ -45,8 +45,6 @@ function getCafeteriaMenu(message, callback) {
     });
 }
 
-var request = require("request");
-
 const spellCheck = (hangle, callback) => {
     var toCheck = encodeURIComponent(hangle);
     var url = `https://m.search.naver.com/p/csearch/dcontent/spellchecker.nhn?_callback=window.__jindo2_callback._spellingCheck_0&q=${toCheck}`

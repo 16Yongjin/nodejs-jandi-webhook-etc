@@ -12,6 +12,8 @@
     "body-parser": "^1.17.2",
     "cheerio-httpcli": "^0.7.0",
     "express": "^4.15.4",
+    "moment": "^2.18.1",
+    "node-flag": "^1.5.1",
     "request": "^2.81.0"
   }
 }
