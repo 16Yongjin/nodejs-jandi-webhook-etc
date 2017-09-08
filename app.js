@@ -10,8 +10,6 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post('/', (req, res) => {
-    console.log(req);
-    console.log(req.body);
 
     const response = {
         body: 'I love Pizza!'
@@ -21,9 +19,7 @@ app.post('/', (req, res) => {
 });
 
 app.post('/cafeteria', (req, res) => {
-    console.log(req);
-    console.log(req.body.text);
-    const text = req.body.text.replace(`/${req.body.keyword}`, '');
+    const text = req.body.text.replace(`/${req.body.keyword} `, '');
 
     if (
         text == '인문관 점심' ||
@@ -31,7 +27,7 @@ app.post('/cafeteria', (req, res) => {
         text == '교수회관 점심' ||
         text == '교수회관 저녁'
     ) {
-        getCafeteriaMenu(message, menu => {
+        getCafeteriaMenu(text, menu => {
             sendData = {
                 body: '맛나게 드세요.',
                 connectInfo: [
@@ -59,10 +55,9 @@ app.post('/cafeteria', (req, res) => {
 });
 
 app.post('/spellCheck', (req, res) => {
-    console.log(req);
-    console.log(req.body);
+    const text = req.body.text.replace(`/${req.body.keyword} `, '');
 
-    if (message.match(/ 뜻$/)) {
+    if (text.match(/ 뜻$/)) {
         getKoreanWord(message, result => {
             sendData = {
                 body: result
