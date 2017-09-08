@@ -47,7 +47,7 @@ app.post('/cafeteria', (req, res) => {
         connectInfo: [
             {
                 title: '명령어',
-                description: '인문관 점심\n인문관 저녁\n교수회관 점심\n교수회관 저녁'
+                description: '/학식 인문관 점심\n/학식 인문관 저녁\n/학식 교수회관 점심\n/학식 교수회관 저녁'
             }
         ]
     };
@@ -58,7 +58,7 @@ app.post('/spellCheck', (req, res) => {
     const text = req.body.text.replace(`/${req.body.keyword} `, '');
 
     if (text.match(/ 뜻$/)) {
-        getKoreanWord(message, result => {
+        getKoreanWord(text, result => {
             sendData = {
                 body: result
             };
@@ -66,7 +66,7 @@ app.post('/spellCheck', (req, res) => {
         });
         return;
     } else {
-        spellCheck(message, result => {
+        spellCheck(text, result => {
             sendData = {
                 body: result
             };
