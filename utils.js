@@ -3,12 +3,13 @@ const client = require('cheerio-httpcli');
 var moment = require('moment');
 
 
+
+
 function getCafeteriaMenu(message, callback) {
     var place = message.split(" ")[0];
     var eatingTime = message.split(" ")[1];
 
-    var today = moment().add(9, 'h').format('YYYYMMDD');
-    
+    var today = new Date().toISOString().substring(0,10).replace(/-/g, '');
     var url = `https://webs.hufs.ac.kr/jsp/HUFS/cafeteria/viewWeek.jsp?startDt=${today}&endDt=${today}`;
     
     if (place == '인문관')
@@ -17,6 +18,7 @@ function getCafeteriaMenu(message, callback) {
         url += '&caf_id=h102';
 
     var menus = '';
+
     var re;
     if (eatingTime == '점심')
          re = /중식.+?\d+원/g;
@@ -125,6 +127,5 @@ const getKoreanWord = (message, callback) => {
         }
         });
 }
-
 
 module.exports = {getCafeteriaMenu, spellCheck, getKoreanWord};
