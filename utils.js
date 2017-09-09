@@ -28,9 +28,12 @@ function getCafeteriaMenu(message, callback) {
 
     client.fetch(url, {}, function (err, $, res) {
         if (err) {console.log('Error : ', err); return;}
-        var menu = $('table').text().replace(/\s+/g, ' ');
+        var menu = $('table').text().replace(/\s+/g, ' ').replace('중식(2)1100~1430 외국어로 메뉴를 알기 원하시면 구글앱 hfspn 또는 웹사이트 www.hfspn.co 에서 확인하실 수 있습니다.', '').replace('석식1640~1840 기타 식당관련 건의사항은 hfspn 게시판을 이용하시면 됩니다.', '');
 
         var match;
+        console.log($('table').text());
+        
+        console.log(menu)
 
         while (match = re.exec(menu)) {
             if (menus != '') {
@@ -127,5 +130,8 @@ const getKoreanWord = (message, callback) => {
         }
         });
 }
+
+getCafeteriaMenu('인문관 저녁', i => console.log(i))
+
 
 module.exports = {getCafeteriaMenu, spellCheck, getKoreanWord};
