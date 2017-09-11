@@ -181,10 +181,10 @@ const getWeatherImun = callback => {
 
                     let h = Number(hour[0]);
 
-                    const text = `${temp[0]}ºC
-               💧 ${reh[0]}%
+                    const text = `🌡 온도 : ${temp[0]}ºC
+               💧 습도 : ${reh[0]}%
                ${rain}
-               강수확률: ${pop[0]}%`.replace(/   ?/g, '');
+               강수확률 : ${pop[0]}%`.replace(/   ?/g, '');
 
                const weather = {
                    title: '이문동 날씨',
@@ -208,3 +208,4 @@ module.exports = {
     getKoreanWord,
     getWeatherImun
 };
+
