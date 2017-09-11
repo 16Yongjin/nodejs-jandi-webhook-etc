@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const nodeFlags = require('node-flag')
 
-const { getCafeteriaMenu, spellCheck, getKoreanWord } = require('./utils');
+const { getCafeteriaMenu, spellCheck, getKoreanWord, getWeatherImun } = require('./utils');
 
 const port = process.env.PORT || nodeFlags.get('port') || 5000;
 
@@ -75,6 +75,27 @@ app.post('/spellCheck', (req, res) => {
         });
     }
 });
+
+app.post('/weatherImun', (req, res) => {
+    getWeatherImun((weather) => {
+
+        if (weather.err) {
+            res.send({body: '서버 오류'});
+        }
+
+        sendData = {
+            body: '현재 날씨입니다.',
+            connectInfo: [
+                {
+                    title: weather.title,
+                    description: weather.text
+                }
+            ]
+        };
+
+        res.send(sendData);
+    })
+})
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
