@@ -2,7 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const nodeFlags = require('node-flag')
 
-const { getCafeteriaMenu, spellCheck, getKoreanWord, getWeatherImun } = require('./utils');
+const { 
+    getCafeteriaMenu, 
+    spellCheck, 
+    getKoreanWord, 
+    getWeatherImun,
+    getDailyAppNews
+} = require('./utils');
 
 const port = process.env.PORT || nodeFlags.get('port') || 5000;
 
@@ -89,6 +95,27 @@ app.post('/weatherImun', (req, res) => {
                 {
                     title: weather.title,
                     description: weather.text
+                }
+            ]
+        };
+
+        res.send(sendData);
+    })
+})
+
+app.post('/dailyAppNews', (req, res) => {
+    getDailyAppNews((news) => {
+
+        if (weather.err) {
+            res.send({body: '서버 오류'});
+        }
+
+        sendData = {
+            body: '일간 이슈',
+            connectInfo: [
+                {
+                    title: '일간 이슈 상세',
+                    description: news
                 }
             ]
         };

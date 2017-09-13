@@ -1,8 +1,11 @@
 const request = require('request');
 const client = require('cheerio-httpcli');
+const cheerio = require('cheerio')
 const parseString = require('xml2js').parseString;
+// const FB = require('fb');
 
-var moment = require('moment');
+
+const moment = require('moment');
 
 function getCafeteriaMenu(message, callback) {
     var place = message.split(' ')[0];
@@ -202,10 +205,128 @@ const getWeatherImun = callback => {
     );
 };
 
+
+getDailyAppNews = (callback)  => {
+
+    
+    client.fetch('https://www.appvillage.or.kr/jsp/apptrend/dayIssueList.jsp', {}, function(err, $, res) {
+        if (err) {
+            console.log('Error : ', err);
+            return;
+        }
+
+        const match = $('.ellipsis01').html().match(/javascript:goBoardView\('(\d+)','20'\)/)
+        match && ((item) => {
+            const url = `https://www.appvillage.or.kr/jsp/apptrend/dayIssueView.jsp?itemNo=${item}`;
+            
+            var headers = {
+                'User-Agent': 'Super Agent/0.0.1',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+            // Configure the request
+            const options = {
+                url: url,
+                method: 'POST',
+                headers
+            };
+            request(options, function(error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    $ = cheerio.load(body);
+
+                    let text = '';
+                    links = $('b a'); //jquery get all hyperlinks
+                    $(links).each(function(i, link){
+                      text += `${$(link).text()}\n${$(link).attr('href')}\n`
+                    });
+
+                    callback(text.trim());
+
+                }
+            })
+        })(match[1]);
+    })    
+}
+
+
+/*
+function getData(callback) {
+
+    var data = [];
+
+    FB.api(
+        `/oauth/access_token?client_id=115636262446229&client_secret=e04f3197abb31698c7357cabfaf6c562&grant_type=client_credentials`,
+        'GET',
+        function(res) {
+            console.log(res);
+            var access_token = res.access_token;
+
+            FB.api(
+                '/digestict',
+                'GET',
+                {
+                    fields: 'feed.limit(2){attachments,created_time}',
+                    access_token
+                },
+                function(res) {
+                    res.feed.data.map(d => d.attachments.data.map(dd => 
+                     dd.subattachments && dd.subattachments.data.map(ddd => {
+                         
+                        const imageUrl = ddd.media.image.src
+
+
+                        const url = `https://wh.jandi.com/connect-api/webhook/13626446/37772e7a1a35f18c2a8c8962fff266c6`;
+                        
+
+                        const body = 
+                        {
+                            "body" : `[[PizzaHouse]](${imageUrl}) You have a new Pizza order.`,
+                            "connectColor" : "#FAC11B",
+                            "connectInfo" : [{
+                            "title" : "Topping",
+                            "description" : "Pepperoni"
+                            },
+                            {
+                            "title": "Location",
+                            "description": "Empire State Building, 5th Ave, New York",
+                            "imageUrl": imageUrl
+                            }]
+                            }
+
+                    
+                        // Configure the request
+                        const options = {
+                            url: url,
+                            method: 'POST',
+                            body,
+                            json: true
+                        };
+
+
+                        request(options, function(error, response, body) {
+                            if (!error && response.statusCode == 200) {
+                                console.log(body);
+                            }
+
+                        })
+
+
+
+                        
+                    
+                    
+                    } )));
+                }
+            );
+        }
+    );
+}
+*/
+
 module.exports = {
     getCafeteriaMenu,
     spellCheck,
     getKoreanWord,
-    getWeatherImun
+    getWeatherImun,
+    getDailyAppNews
 };
 
