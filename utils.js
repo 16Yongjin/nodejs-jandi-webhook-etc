@@ -236,7 +236,7 @@ getDailyAppNews = (callback)  => {
                     let text = '';
                     links = $('b a'); //jquery get all hyperlinks
                     $(links).each(function(i, link){
-                      text += `${$(link).text()}\n${$(link).attr('href')}\n`
+                      text += `${$(link).text()}\n${$(link).attr('href')}\n\n`
                     });
 
                     callback(text.trim());

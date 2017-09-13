@@ -105,13 +105,8 @@ app.post('/weatherImun', (req, res) => {
 
 app.post('/dailyAppNews', (req, res) => {
     getDailyAppNews((news) => {
-
-        if (weather.err) {
-            res.send({body: '서버 오류'});
-        }
-
         sendData = {
-            body: '일간 이슈',
+            body: '일간 이슈입니다.',
             connectInfo: [
                 {
                     title: '일간 이슈 상세',
