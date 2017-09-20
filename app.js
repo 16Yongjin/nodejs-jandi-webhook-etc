@@ -7,7 +7,8 @@ const {
     spellCheck, 
     getKoreanWord, 
     getWeatherImun,
-    getDailyAppNews
+    getDailyAppNews,
+    sendPostToJandi
 } = require('./utils');
 
 const port = process.env.PORT || nodeFlags.get('port') || 5000;
@@ -105,6 +106,10 @@ app.post('/weatherImun', (req, res) => {
 
 app.post('/dailyAppNews', (req, res) => {
     getDailyAppNews((news) => {
+        if (news.includes(moment().format("YYYY. MM. DD"))) {
+            return res.send({ body: '아직 안 올라왔어요'});
+        }
+        
         sendData = {
             body: '일간 이슈입니다.',
             connectInfo: [
@@ -116,8 +121,30 @@ app.post('/dailyAppNews', (req, res) => {
         };
 
         res.send(sendData);
-    })
-})
+    });
+});
+
+app.get('/dailyAppNewsCron', (req, res) => {
+    getDailyAppNews((news) => {
+        if (news.includes(moment().format("YYYY. MM. DD"))) {
+            return res.send('ok');
+        }
+        
+        sendData = {
+            body: '일간 이슈입니다.',
+            connectInfo: [
+                {
+                    title: '일간 이슈 상세',
+                    description: news
+                }
+            ]
+        };
+
+        sendPostToJandi('https://wh.jandi.com/connect-api/webhook/13626446/580fb5cc1e7d23078597e095f602fd6e', sendData);
+        res.send('ok');
+        
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);

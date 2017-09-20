@@ -207,8 +207,6 @@ const getWeatherImun = callback => {
 
 
 getDailyAppNews = (callback)  => {
-
-    
     client.fetch('https://www.appvillage.or.kr/jsp/apptrend/dayIssueList.jsp', {}, function(err, $, res) {
         if (err) {
             console.log('Error : ', err);
@@ -238,16 +236,35 @@ getDailyAppNews = (callback)  => {
                     $(links).each(function(i, link){
                       text += `${$(link).text()}\n${$(link).attr('href')}\n\n`
                     });
-
                     callback(text.trim());
+                    
 
                 }
-            })
+            });
         })(match[1]);
     })    
 }
 
+const sendPostToJandi = (url, body) => {
+    var headers = {
+        'User-Agent': 'Super Agent/0.0.1',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    // Configure the request
+    const options = {
+        url,
+        method: 'POST',
+        headers,
+        body
+    };
+    request(options, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
 
+
+        }
+    });
+
+};
 /*
 function getData(callback) {
 
@@ -327,6 +344,6 @@ module.exports = {
     spellCheck,
     getKoreanWord,
     getWeatherImun,
-    getDailyAppNews
+    getDailyAppNews,
+    sendPostToJandi
 };
-
