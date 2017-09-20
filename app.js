@@ -141,7 +141,7 @@ app.get('/dailyAppNewsCron', (req, res) => {
             ]
         };
 
-        sendPostToJandi('https://wh.jandi.com/connect-api/webhook/13626446/37772e7a1a35f18c2a8c8962fff266c6', sendData);
+        sendPostToJandi('https://wh.jandi.com/connect-api/webhook/13626446/f23d9931ba111aca98904f1b22e4623b', sendData);
         res.send('ok');
         
     });
