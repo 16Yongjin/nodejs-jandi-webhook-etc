@@ -218,8 +218,8 @@ getDailyAppNews = (callback)  => {
             const url = `https://www.appvillage.or.kr/jsp/apptrend/dayIssueView.jsp?itemNo=${item}`;
             
             var headers = {
-                'User-Agent': 'Super Agent/0.0.1',
-                'Content-Type': 'application/x-www-form-urlencoded'
+                Accept: "application/vnd.tosslab.jandi-v2+json",
+                "Content-Type": "application/json"
             };
             // Configure the request
             const options = {
