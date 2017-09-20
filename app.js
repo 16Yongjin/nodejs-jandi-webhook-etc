@@ -127,8 +127,8 @@ app.post('/dailyAppNews', (req, res) => {
 
 app.get('/dailyAppNewsCron', (req, res) => {
     getDailyAppNews((news) => {
-        if (news.includes(moment().format("YYYY. MM. DD"))) {
-            return res.send('ok');
+        if (!news.includes(moment().format("YYYY. MM. DD"))) {
+            return res.send('ok, but no news');
         }
         
         sendData = {

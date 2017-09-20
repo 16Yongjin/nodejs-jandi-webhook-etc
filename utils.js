@@ -218,8 +218,8 @@ getDailyAppNews = (callback)  => {
             const url = `https://www.appvillage.or.kr/jsp/apptrend/dayIssueView.jsp?itemNo=${item}`;
             
             var headers = {
-                Accept: "application/vnd.tosslab.jandi-v2+json",
-                "Content-Type": "application/json"
+                'User-Agent': 'Super Agent/0.0.1',
+                'Content-Type': 'application/x-www-form-urlencoded'
             };
             // Configure the request
             const options = {
@@ -247,8 +247,8 @@ getDailyAppNews = (callback)  => {
 
 const sendPostToJandi = (url, body) => {
     var headers = {
-        'User-Agent': 'Super Agent/0.0.1',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        Accept: 'application/vnd.tosslab.jandi-v2+json',
+        'Content-Type': 'application/json'
     };
     // Configure the request
     const options = {
@@ -266,6 +266,7 @@ const sendPostToJandi = (url, body) => {
     });
 
 };
+
 /*
 function getData(callback) {
 
