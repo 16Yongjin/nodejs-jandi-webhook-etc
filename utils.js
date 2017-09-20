@@ -255,7 +255,8 @@ const sendPostToJandi = (url, body) => {
         url,
         method: 'POST',
         headers,
-        body
+        body,
+        json: true
     };
     request(options, function(error, response, body) {
         if (!error && response.statusCode == 200) {
