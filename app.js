@@ -147,6 +147,10 @@ app.get('/dailyAppNewsCron', (req, res) => {
     });
 });
 
+app.get('/time', (req, res) => { 
+    res.send(moment().format('YYYY MM DD hh:mm:ss'));
+})
+
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
 });
